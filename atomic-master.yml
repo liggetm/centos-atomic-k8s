@@ -1,7 +1,0 @@
----
-- name: Deploy k8s-master containers on Centos Atomic Host
-  hosts: k8s-master
-  remote_user: deploy
-  become: true
-  roles:
-  - atomic-k8s-master

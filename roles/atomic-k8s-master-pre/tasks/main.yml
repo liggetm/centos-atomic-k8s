@@ -1,0 +1,17 @@
+---
+- name: Set the initial value for the is_atomic fact
+  set_fact:
+    is_atomic: false
+
+- name: Determine if Atomic
+  stat: path=/run/ostree-booted
+  register: s
+  changed_when: false
+
+- name: Set the is_atomic fact
+  set_fact:
+    is_atomic: true
+  when: s.stat.exists
+
+- include: configure_selinux.yml  # TODO - see http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/
+- include: configure_k8s_services.yml

@@ -1,0 +1,7 @@
+---
+- name: Deploy kubernetes master services on Atomic host
+  hosts: master
+  remote_user: deploy
+  become: true
+  roles:
+  - atomic-k8s-master-pre

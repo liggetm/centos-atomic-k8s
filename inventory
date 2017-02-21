@@ -1,2 +1,2 @@
-[k8s-master]
-localhost:2222
+[master]
+atomic80 ansible_connection=ssh ansible_user=deploy

@@ -13,8 +13,4 @@
     is_atomic: true
   when: s.stat.exists
 
-- include: configure_selinux.yml  # TODO - see http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/
-- include: configure_svc_acc_key.yml
-- include: configure_etcd.yml
-- include: configure_k8s_services.yml
-- include: configure_k8s.yml
+- include: configure_k8s_external_access.yml

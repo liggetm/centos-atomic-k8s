@@ -1,7 +1,0 @@
----
-combi: true
-cluster_subnet: "10.254.0.0/16"
-skydns_enable: true
-dns_server: "10.254.0.10"
-dns_domain: "kubernetes.local"
-service_account_key_file: "/etc/kubernetes/serviceaccount.key"

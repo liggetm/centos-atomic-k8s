@@ -1,0 +1,7 @@
+---
+- name: Enable Kubernetes API service externally on an Atomic host
+  hosts: master
+  remote_user: deploy
+  become: true
+  roles:
+  - atomic-k8s-master-post
