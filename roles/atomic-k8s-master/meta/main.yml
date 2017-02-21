@@ -1,0 +1,18 @@
+---
+galaxy_info:
+  author: Mark Liggett
+  description: Deploys Kubernetes (k8s) master on Centos Atomic Host
+  company: juniper.net
+  license: MIT
+  min_ansible_version: 2.1
+  platforms:
+  - name: EL
+    versions:
+    - 7
+  galaxy_tags:
+  - system
+  - clustering
+  - docker
+  - centos
+  - container
+dependencies: []

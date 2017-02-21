@@ -1,0 +1,5 @@
+---
+- name: Configure service account RSA key
+  command: openssl genrsa -out "{{ service_account_key_file }}"
+  args:
+    creates: "{{ service_account_key_file }}"

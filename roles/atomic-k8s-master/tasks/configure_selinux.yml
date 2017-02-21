@@ -1,0 +1,9 @@
+---
+- name: Set SELinux to permissive
+  command: /usr/sbin/setenforce 0
+
+- name: Set SELinux to permissive persistently
+  lineinfile:
+    dest: /etc/selinux/config
+    regexp: '^SELINUX='
+    line: 'SELINUX=permissive'
