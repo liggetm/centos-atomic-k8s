@@ -4,7 +4,7 @@ Ansible project for deploying containerized Kubernetes services on Centos Atomic
 
 ## Pre-Reqs and setup
 
-On the Atomic hosts create a passwordless 'deploy' user with sudo privileges. eg;
+On each Atomic host create a passwordless 'deploy' user with sudo privileges. eg;
 ```
 # useradd deploy
 # passwd deploy
@@ -15,7 +15,14 @@ In visudo add the line:
 ```
 deploy  ALL=(ALL)       NOPASSWD: ALL
 ```
-Next update the `inventory` file with your IP addresses or DNS names and, if necessary, you're ansible deployment username. eg;
+
+---
+**NOTE:**
+If you get warnings about missing locales when logging on to the Atomic host e.g. en_GB.UTF-8 use `export LC_ALL="en_US.UTF-8"`
+
+---
+
+Now update the `inventory` file with your IP addresses or DNS names and, if necessary, your ansible deployment user. eg;
 ```
 [master]
 192.168.1.1 ansible_connection=ssh ansible_user=deploy
@@ -26,12 +33,10 @@ Next update the `inventory` file with your IP addresses or DNS names and, if nec
 [nodes]
 192.168.1.2 ansible_connection=ssh ansible_user=deploy
 ```
-
----
-**NOTE:**
-If you get warnings about missing locales when logging on to the Atomic host e.g. en_GB.UTF-8 use `export LC_ALL="en_US.UTF-8"`
-
----
+This project also requires the kubernetes/contrib project - it contains the ansible scripts for the upstream Kubernetes install.  Simply clone the https://github.com/kubernetes/contrib project into the third-party directory. eg;
+```
+git clone https://github.com/kubernetes/contrib.git third-party/contrib
+```
 
 ## Running
 
