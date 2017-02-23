@@ -35,7 +35,7 @@ Now update the `inventory` file with your IP addresses or DNS names and, if nece
 ```
 This project also requires the kubernetes/contrib project - it contains the ansible scripts for the upstream Kubernetes install.  Simply clone the https://github.com/kubernetes/contrib project into the third-party directory. eg;
 ```
-git clone https://github.com/kubernetes/contrib.git third-party/contrib
+$ git clone https://github.com/kubernetes/contrib.git third-party/contrib
 ```
 
 ## Running

@@ -58,13 +58,13 @@ function check_deps() {
   if [ ! -d "${KUBERNETES_INVENTORY_DIR}" ]; then
     fatal "inventory directory not found for Kubernetes contrib project"
   fi
-  log_success
+  log_success "Checking dependencies"
 }
 
 function execute_ansible_pre() {
   log "Executing Atomic host playbook..."
-  ansible-playbook -i inventory atomic-master-pre.yml
-  log_success
+  ansible-playbook -i inventory atomic-master-pre.yml || fatal "Failed to complete pre Kubernetes playbook"
+  log_success "Executing Atomic host playbook"
 }
 
 function execute_k8s_deploy_cluster() {
@@ -73,13 +73,13 @@ function execute_k8s_deploy_cluster() {
   pushd ${KUBERNETES_SCRIPT_DIR} 2>&1
   ./${KUBERNETES_SCRIPT} || fatal "Kubernetes deploy-cluster script failed"
   popd 2>&1
-  log_success
+  log_success "Executing Kubernetes deploy-cluster script"
 }
 
 function execute_ansible_post() {
-  log "Install Atomic host playbook..."
-  ansible-playbook -i inventory atomic-master-post.yml
-  log_success
+  log "Installing Atomic host playbook..."
+  ansible-playbook -i inventory atomic-master-post.yml || fatal "Failed to complete post Kubernetes playbook"
+  log_success "Installing Atomic host playbook"
 }
 
 function fatal() {
@@ -93,11 +93,11 @@ function log() {
 }
 
 function log_success() {
-  log "\t[SUCCESS]"
+  log "$1:\t[SUCCESS]\n"
 }
 
 function log_failure() {
-  log "\t[FAILED]"
+  log "$1:\t[FAILED]\n"
 }
 
-main $@
+main $*
