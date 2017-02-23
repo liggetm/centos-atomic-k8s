@@ -24,7 +24,7 @@ If you get warnings about missing locales when logging on to the Atomic host e.g
 
 Now update the `inventory` file with your IP addresses or DNS names and, if necessary, your ansible deployment user. eg;
 ```
-[master]
+[masters]
 192.168.1.1 ansible_connection=ssh ansible_user=deploy
 
 [etcd]
@@ -42,10 +42,10 @@ git clone https://github.com/kubernetes/contrib.git third-party/contrib
 
 Execute the `deploy-atomic-cluster.sh` from the project directory. eg;
 ```
-sh scripts/deploy-atomic-cluster.sh
+$ sh scripts/deploy-atomic-cluster.sh
 ```
 
-Optionally, if you want to enable insecure http access to the Kubernetes API server and install the Kubernetes dashboard pass the `-d` option:
+Optionally, to enable insecure HTTP access to the Kubernetes API server and install the Kubernetes dashboard pass the `-d` option:
 ```
-sh scripts/deploy-atomic-cluster.sh -d
+$ sh scripts/deploy-atomic-cluster.sh -d
 ```

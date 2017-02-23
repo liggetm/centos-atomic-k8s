@@ -11,7 +11,7 @@ function main() {
 
   while getopts "dh" option; do
     case $option in
-      * ) showUsage
+      h ) showUsage
           exit 1;;
       d ) enable_insecure=true;;
       * ) showUsage
@@ -44,39 +44,60 @@ END
 }
 
 function check_deps() {
+  log "Checking dependencies..."
   if [ ! -f "${INVENTORY_FILE}" ]; then
-    fatal 'ERROR: Cannot find inventory file in current directory'
+    fatal "inventory file not found in current directory"
   fi
 
-  which -s ansible-playbook || fatal 'ERROR: ansible-playbook not found on path'
+  which -s ansible-playbook || fatal "ansible-playbook not found on path"
 
   if [ ! -f "${KUBERNETES_SCRIPT_DIR}/${KUBERNETES_SCRIPT}" ]; then
-    fatal 'ERROR: Kubernetes contrib project not found in third-party'
+    fatal "Kubernetes contrib project not found in third-party directory"
   fi
 
   if [ ! -d "${KUBERNETES_INVENTORY_DIR}" ]; then
-    fatal 'ERROR: Cannot find third-party inventory directory'
+    fatal "inventory directory not found for Kubernetes contrib project"
   fi
+  log_success
 }
 
 function execute_ansible_pre() {
+  log "Executing Atomic host playbook..."
   ansible-playbook -i inventory atomic-master-pre.yml
+  log_success
 }
 
 function execute_k8s_deploy_cluster() {
-  /bin/cp -f ${INVENTORY_FILE} ${KUBERNETES_INVENTORY_DIR} || fatal 'ERROR: Failed to copy inventory file to third-party directory'
+  log "Executing Kubernetes deploy-cluster script..."
+  /bin/cp -f ${INVENTORY_FILE} ${KUBERNETES_INVENTORY_DIR} || fatal "Failed to copy inventory file to third-party directory"
   pushd ${KUBERNETES_SCRIPT_DIR} 2>&1
-  ./${KUBERNETES_SCRIPT} || fatal 'ERROR: Third-party Kubernetes deploy-cluster script failed'
+  ./${KUBERNETES_SCRIPT} || fatal "Kubernetes deploy-cluster script failed"
   popd 2>&1
+  log_success
 }
 
 function execute_ansible_post() {
+  log "Install Atomic host playbook..."
   ansible-playbook -i inventory atomic-master-post.yml
+  log_success
 }
 
 function fatal() {
-  echo $1
+  log_failure
+  log "\nERROR: $1\n"
   exit 1
+}
+
+function log() {
+  printf "$1"
+}
+
+function log_success() {
+  log "\t[SUCCESS]"
+}
+
+function log_failure() {
+  log "\t[FAILED]"
 }
 
 main $@

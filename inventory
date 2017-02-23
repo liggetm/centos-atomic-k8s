@@ -1,4 +1,4 @@
-[master]
+[masters]
 atomic80 ansible_connection=ssh ansible_user=deploy
 
 [etcd]
