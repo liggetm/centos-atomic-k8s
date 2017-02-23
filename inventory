@@ -1,2 +1,9 @@
 [master]
 atomic80 ansible_connection=ssh ansible_user=deploy
+
+[etcd]
+atomic80 ansible_connection=ssh ansible_user=deploy
+
+[nodes]
+#atomic81 ansible_connection=ssh ansible_user=deploy
+#atomic82 ansible_connection=ssh ansible_user=deploy
