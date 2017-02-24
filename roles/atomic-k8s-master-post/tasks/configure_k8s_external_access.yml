@@ -7,7 +7,7 @@
     state: present
     create: yes
   with_items:
-    - { name: 'apiserver', regex: "^KUBE_API_ADDRESS", line: 'KUBE_API_ADDRESS="--insecure-bind-address==0.0.0.0"' }
+    - { name: 'apiserver', regex: "^KUBE_API_ADDRESS", line: 'KUBE_API_ADDRESS="--insecure-bind-address=0.0.0.0"' }
   notify: restart k8sapi
 
 - name: Configure the k8s dashboard
@@ -16,6 +16,7 @@
 
 - name: Add port 8080 to iptables
   iptables:
+    action: insert
     chain: KUBE-FIREWALL
     protocol: tcp
     destination_port: 8080

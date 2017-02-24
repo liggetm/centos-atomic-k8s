@@ -20,6 +20,9 @@ function main() {
   done
 
   check_deps
+
+  export LC_ALL="en_US.UTF-8" #Used to ensure no setlocale mapping errors
+
   execute_ansible_pre
   execute_k8s_deploy_cluster
 
