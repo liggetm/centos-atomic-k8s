@@ -1,7 +1,15 @@
 ---
-- name: Deploy kubernetes master services on Atomic host
+- name: Ready Atomic host for Kubernetes master services
   hosts: masters
   remote_user: deploy
   become: true
   roles:
-  - atomic-k8s-master-pre
+    - common
+    - atomic-k8s-master-pre
+
+- name: Ready Atomic host for Kubelet
+  hosts: masters
+  remote_user: deploy
+  become: true
+  roles:
+    - common

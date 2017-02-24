@@ -2,9 +2,9 @@
 
 Ansible project for deploying containerized Kubernetes services on Centos Atomic Host 7 host systems.  This is simply a wrapper to the upstream Kubernetes deployment scripts [available here](https://github.com/kubernetes/contrib/tree/master/ansible).  It will prepare the Atomic host system for Kubernetes, deploy a Kubernetes cluster and optionally install a Kubernetes dashboard with insecure access on the master on TCP port 8080.
 
-## Pre-Reqs and setup
+## Pre-Reqs and Setup
 
-On each Atomic host create a passwordless 'deploy' user with sudo privileges. eg;
+On each Atomic host create a password-less 'deploy' user with sudo privileges. eg;
 ```
 # useradd deploy
 # passwd deploy
@@ -48,4 +48,15 @@ $ sh scripts/deploy-atomic-cluster.sh
 Optionally, to enable insecure HTTP access to the Kubernetes API server and install the Kubernetes dashboard pass the `-d` option:
 ```
 $ sh scripts/deploy-atomic-cluster.sh -d
+```
+
+## Alternatives
+
+To make your Atomic host Kubernetes-capable you can run the ansible `atomic-master-pre.yml` playbook in the normal manner. eg;
+```
+$ ansible-playbook -i inventory atomic-master-pre.yml
+```
+To install the Kubernetes dashboard and open port 8080 for the API server use the ansible `atomic-master-post.yml` playbook. eg;
+```
+$ ansible-playbook -i inventory atomic-master-post.yml
 ```

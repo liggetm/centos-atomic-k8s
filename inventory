@@ -5,5 +5,6 @@ atomic80 ansible_connection=ssh ansible_user=deploy
 atomic80 ansible_connection=ssh ansible_user=deploy
 
 [nodes]
-#atomic81 ansible_connection=ssh ansible_user=deploy
-#atomic82 ansible_connection=ssh ansible_user=deploy
+atomic80 ansible_connection=ssh ansible_user=deploy
+atomic81 ansible_connection=ssh ansible_user=deploy
+atomic82 ansible_connection=ssh ansible_user=deploy

@@ -63,16 +63,16 @@ function check_deps() {
 
 function execute_ansible_pre() {
   log "Executing Atomic host playbook..."
-  ansible-playbook -i inventory atomic-master-pre.yml || fatal "Failed to complete pre Kubernetes playbook"
+  #ansible-playbook -i inventory atomic-master-pre.yml || fatal "Failed to complete pre Kubernetes playbook"
   log_success "Executing Atomic host playbook"
 }
 
 function execute_k8s_deploy_cluster() {
   log "Executing Kubernetes deploy-cluster script..."
-  /bin/cp -f ${INVENTORY_FILE} ${KUBERNETES_INVENTORY_DIR} || fatal "Failed to copy inventory file to third-party directory"
-  pushd ${KUBERNETES_SCRIPT_DIR} 2>&1
-  ./${KUBERNETES_SCRIPT} || fatal "Kubernetes deploy-cluster script failed"
-  popd 2>&1
+  # /bin/cp -f ${INVENTORY_FILE} ${KUBERNETES_INVENTORY_DIR} || fatal "Failed to copy inventory file to third-party directory"
+  # pushd ${KUBERNETES_SCRIPT_DIR} 2>&1
+  # ./${KUBERNETES_SCRIPT} || fatal "Kubernetes deploy-cluster script failed"
+  # popd 2>&1
   log_success "Executing Kubernetes deploy-cluster script"
 }
 

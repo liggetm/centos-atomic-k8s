@@ -13,4 +13,4 @@
     is_atomic: true
   when: s.stat.exists
 
-- include: configure_k8s_services.yml
+- include: configure_selinux.yml  # TODO - see http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/
