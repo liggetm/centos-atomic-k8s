@@ -1,10 +1,10 @@
 # centos-atomic-k8s
 
-Ansible project for deploying containerized Kubernetes services on Centos Atomic Host 7 host systems.  This is simply a wrapper to the upstream Kubernetes deployment scripts [available here](https://github.com/kubernetes/contrib/tree/master/ansible).  It will prepare the Atomic host system for Kubernetes, deploy a Kubernetes cluster and optionally install a Kubernetes dashboard with insecure access on the master on TCP port 8080.
+Ansible project for deploying containerized Kubernetes services on Centos Atomic Host 7 host systems.  This is simply a wrapper to the upstream Kubernetes deployment scripts [available here](https://github.com/kubernetes/contrib/tree/master/ansible).  It will prepare the Atomic host system for Kubernetes, deploy a Kubernetes cluster and optionally install a Kubernetes dashboard with insecure access on the master on TCP port 8080.  It will also output a valid kubectl configuration which can be saved in a ~/.kube/config file.
 
 ## Pre-Reqs and Setup
 
-For the local system which will run the installation:
+Requirements for the system which will run the installation:
 - bash _(for running the installation script)_
 - ansible > version 2.1 _(for running the ansible playbooks)_
 - kubectl > version 1.3.0 _(optional, allows secure CLI access and proxying)_
@@ -54,6 +54,13 @@ Optionally, to enable insecure HTTP access to the Kubernetes API server and inst
 ```
 $ sh scripts/deploy-atomic-cluster.sh -d
 ```
+The script will log to the `logs/deploy-atomic-cluster.log` - this is where to go if you find any errors.  You can also watch the log in another terminal using something like `tail -f logs/deploy-atomic-cluster.log`.
+
+At the end of the script, a configuration for Kubectl is listed.  Save this into your ~/.kube/config file for secure connection to the cluster using kubectl.  Once saved it can also be used to proxy the server. eg;
+```
+kubectl proxy --port=8080 &
+```
+With the proxy running endpoints will be available. eg; http://localhost:8080/ui
 
 ## Alternatives
 

@@ -12,6 +12,7 @@
 
 - name: Check if k8s dashboard is running
   shell: "/usr/bin/kubectl --namespace=kube-system get svc | grep -q kubernetes-dashboard"
+  ignore_errors: yes
   register: present
 
 - name: Install the k8s dashboard

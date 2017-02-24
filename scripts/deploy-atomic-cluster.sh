@@ -6,7 +6,7 @@ INVENTORY_FILE="./inventory"
 KUBERNETES_SCRIPT_DIR="./third-party/contrib/ansible/scripts"
 KUBERNETES_SCRIPT="deploy-cluster.sh"
 KUBERNETES_INVENTORY_DIR="./third-party/contrib/ansible/inventory"
-LOG_FILE="./logs/deploy-atomic-cluster.log"
+LOG_FILE="$(pwd)/logs/deploy-atomic-cluster.log"
 
 function main() {
 
@@ -85,7 +85,7 @@ function execute_k8s_deploy_cluster() {
   /bin/cp -f ${INVENTORY_FILE} ${KUBERNETES_INVENTORY_DIR} || fatal "Failed to copy inventory file to third-party directory"
   pushd ${KUBERNETES_SCRIPT_DIR} >> "${LOG_FILE}" 2>&1
   ./${KUBERNETES_SCRIPT} >> "${LOG_FILE}" 2>&1 || fatal "Kubernetes deploy-cluster script failed"
-  popd 2>&1 >> "${LOG_FILE}"
+  popd >> "${LOG_FILE}" 2>&1
   log_success
 }
 
