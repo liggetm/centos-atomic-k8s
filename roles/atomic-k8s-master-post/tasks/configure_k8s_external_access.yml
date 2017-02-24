@@ -10,9 +10,13 @@
     - { name: 'apiserver', regex: "^KUBE_API_ADDRESS", line: 'KUBE_API_ADDRESS="--insecure-bind-address=0.0.0.0"' }
   notify: restart k8sapi
 
-- name: Configure the k8s dashboard
+- name: Check if k8s dashboard is running
+  shell: "/usr/bin/kubectl --namespace=kube-system get svc | grep -q kubernetes-dashboard"
+  register: present
+
+- name: Install the k8s dashboard
   command: /usr/bin/kubectl create -f https://rawgit.com/kubernetes/dashboard/master/src/deploy/kubernetes-dashboard.yaml
-  #TODO add when!
+  when: present.rc != 0
 
 - name: Add port 8080 to iptables
   iptables:

@@ -6,6 +6,7 @@ INVENTORY_FILE="./inventory"
 KUBERNETES_SCRIPT_DIR="./third-party/contrib/ansible/scripts"
 KUBERNETES_SCRIPT="deploy-cluster.sh"
 KUBERNETES_INVENTORY_DIR="./third-party/contrib/ansible/inventory"
+LOG_FILE="./logs/deploy-atomic-cluster.log"
 
 function main() {
 
@@ -19,6 +20,7 @@ function main() {
     esac
   done
 
+  log_header
   check_deps
 
   export LC_ALL="en_US.UTF-8" #Used to ensure no setlocale mapping errors
@@ -29,6 +31,10 @@ function main() {
   if [ "${enable_insecure}" = "true" ]; then
     execute_ansible_post
   fi
+
+  echo_kubectl_context
+
+  log_footer
 }
 
 function showUsage() {
@@ -61,28 +67,60 @@ function check_deps() {
   if [ ! -d "${KUBERNETES_INVENTORY_DIR}" ]; then
     fatal "inventory directory not found for Kubernetes contrib project"
   fi
-  log_success "Checking dependencies"
+
+  which -s kubectl || warning "Kubectl not found on the local path!"
+
+  log_success
+
 }
 
 function execute_ansible_pre() {
-  log "Executing Atomic host playbook..."
-  ansible-playbook -i inventory atomic-master-pre.yml || fatal "Failed to complete pre Kubernetes playbook"
-  log_success "Executing Atomic host playbook"
+  log "Executing Atomic host pre playbook..."
+  ansible-playbook -i inventory atomic-master-pre.yml >> "${LOG_FILE}" 2>&1 || fatal "Failed to complete pre Kubernetes playbook"
+  log_success
 }
 
 function execute_k8s_deploy_cluster() {
   log "Executing Kubernetes deploy-cluster script..."
   /bin/cp -f ${INVENTORY_FILE} ${KUBERNETES_INVENTORY_DIR} || fatal "Failed to copy inventory file to third-party directory"
-  pushd ${KUBERNETES_SCRIPT_DIR} 2>&1
-  ./${KUBERNETES_SCRIPT} || fatal "Kubernetes deploy-cluster script failed"
-  popd 2>&1
-  log_success "Executing Kubernetes deploy-cluster script"
+  pushd ${KUBERNETES_SCRIPT_DIR} >> "${LOG_FILE}" 2>&1
+  ./${KUBERNETES_SCRIPT} >> "${LOG_FILE}" 2>&1 || fatal "Kubernetes deploy-cluster script failed"
+  popd 2>&1 >> "${LOG_FILE}"
+  log_success
 }
 
 function execute_ansible_post() {
-  log "Installing Atomic host playbook..."
-  ansible-playbook -i inventory atomic-master-post.yml || fatal "Failed to complete post Kubernetes playbook"
-  log_success "Installing Atomic host playbook"
+  log "Installing Atomic host post playbook..."
+  ansible-playbook -i inventory atomic-master-post.yml >> "${LOG_FILE}" 2>&1 || fatal "Failed to complete post Kubernetes playbook"
+  log_success
+}
+
+function echo_kubectl_context() {
+  master_line=$(sed -n 2p ${INVENTORY_FILE})
+  master=$(echo ${master_line} | awk '{print $1}')
+  user=$(echo ${master_line} | awk -F= '{print $NF}')
+  if $(echo ${master} | grep -q ":"); then
+    port=$(echo ${master} | awk -F: '{print $NF}')
+    ssh -p ${port} ${user}@${master} "echo "[START]";cat /etc/kubernetes/kubectl.kubeconfig; echo "[END]""
+  else
+    ssh ${user}@${master} "echo "";cat /etc/kubernetes/kubectl.kubeconfig; echo """
+  fi
+}
+
+### LOGGING FUNCTIONS ###
+function log_header() {
+  log_line
+  log_to_file "* ${SCRIPT_NAME} @ $(date "+%Y/%m/%d %H:%M:%S")\n"
+  log_line
+}
+
+function log_footer() {
+  log_to_file "\n"
+  log_line
+}
+
+function log_line() {
+  log_to_file "******************************************************************\n"
 }
 
 function fatal() {
@@ -91,16 +129,27 @@ function fatal() {
   exit 1
 }
 
+function warning() {
+  log "\nWARNING: $1\n"
+}
+
 function log() {
   printf "$1"
+  log_to_file "$1"
+}
+
+function log_to_file() {
+  printf "$1" >> "${LOG_FILE}"
 }
 
 function log_success() {
-  log "$1:\t[SUCCESS]\n"
+  log "\t[SUCCESS]\n"
+  log_to_file "$1"
 }
 
 function log_failure() {
-  log "$1:\t[FAILED]\n"
+  log "\t[FAILED]\n"
+  log_to_file "$1"
 }
 
 main $*

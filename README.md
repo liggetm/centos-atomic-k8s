@@ -4,6 +4,11 @@ Ansible project for deploying containerized Kubernetes services on Centos Atomic
 
 ## Pre-Reqs and Setup
 
+For the local system which will run the installation:
+- bash _(for running the installation script)_
+- ansible > version 2.1 _(for running the ansible playbooks)_
+- kubectl > version 1.3.0 _(optional, allows secure CLI access and proxying)_
+
 On each Atomic host create a password-less 'deploy' user with sudo privileges. eg;
 ```
 # useradd deploy

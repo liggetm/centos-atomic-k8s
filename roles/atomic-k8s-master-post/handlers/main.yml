@@ -1,10 +1,10 @@
 ---
 - name: restart k8sapi
-  service:
-    name: kube-apiserver
+  systemd:
+    name: kube-apiserver.service
     state: restarted
 
 - name: restart iptables
-  service:
+  systemd:
     name: iptables
     state: restarted

@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Mark Liggett
-  description: Enable external access to Kubernetes API on Centos Atomic Host
+  description: Enable insecure external access to Kubernetes API server on Atomic Host
   company: juniper.net
   license: MIT
   min_ansible_version: 2.1
