@@ -25,6 +25,7 @@ function main() {
 
   export LC_ALL="en_US.UTF-8" #Used to ensure no setlocale mapping errors
 
+  check_ansible_inventory
   execute_ansible_pre
   execute_k8s_deploy_cluster
 
@@ -58,6 +59,7 @@ function check_deps() {
     fatal "inventory file not found in current directory"
   fi
 
+  which -s ansible|| fatal "ansible not found on path"
   which -s ansible-playbook || fatal "ansible-playbook not found on path"
 
   if [ ! -f "${KUBERNETES_SCRIPT_DIR}/${KUBERNETES_SCRIPT}" ]; then
@@ -71,7 +73,12 @@ function check_deps() {
   which -s kubectl || warning "Kubectl not found on the local path!"
 
   log_success
+}
 
+function check_ansible_inventory() {
+  log "Validating ansible inventory..."
+  ansible -i inventory all -m ping >> "${LOG_FILE}" 2>&1 || fatal "Failed to connect to ansible inventory hosts"
+  log_success
 }
 
 function execute_ansible_pre() {

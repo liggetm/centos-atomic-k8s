@@ -9,18 +9,20 @@ Requirements for the system which will run the installation:
 - ansible > version 2.1 _(for running the ansible playbooks)_
 - kubectl > version 1.3.0 _(optional, allows secure CLI access and proxying)_
 
-On each Atomic host create a password-less 'deploy' user with sudo privileges. eg;
+On each Atomic host create a 'deploy' user with sudo privileges. eg;
 ```
 # useradd deploy
 # passwd deploy
 # visudo
 ```
-
 In visudo add the line:
 ```
 deploy  ALL=(ALL)       NOPASSWD: ALL
 ```
-
+Ensure you have configured password-less SSH to the Atomic hosts. eg;
+```
+ssh-copy-id deploy@atomic
+```
 ---
 **NOTE:**
 If you get warnings about missing locales when logging on to the Atomic host e.g. en_GB.UTF-8 use `export LC_ALL="en_US.UTF-8"`
@@ -38,6 +40,7 @@ Now update the `inventory` file with your IP addresses or DNS names and, if nece
 [nodes]
 192.168.1.2 ansible_connection=ssh ansible_user=deploy
 ```
+
 This project also requires the kubernetes/contrib project - it contains the ansible scripts for the upstream Kubernetes install.  Simply clone the https://github.com/kubernetes/contrib project into the third-party directory. eg;
 ```
 $ git clone https://github.com/kubernetes/contrib.git third-party/contrib
