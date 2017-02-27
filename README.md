@@ -62,6 +62,17 @@ kubectl proxy --port=8080 &
 ```
 With the proxy running endpoints will be available. eg; http://localhost:8080/ui
 
+## Ansible Roles
+
+#### Common
+Runs on both Kubernetes masters and nodes.  Currently disables SELinux on Atomic - see http://www.projectatomic.io/blog/2017/01/centos-atomic-jan17/ for further info.
+
+#### atomic-master-pre
+Runs on Kubernetes masters only.  Installs service definitions files for kube-apiserver, kube-controller-manager and kube-scheduler and reloads the systemd configuration.
+
+#### atomic-master-post
+Runs on Kubernetes masters only (after the Kubernetes deploy-cluster script from Kubernetes/contrib/ansible/scripts).  Reconfigures and reloads the Kuberneres API server so that it binds insecurely to port 8080 on the master.  Installs the Kubernetes dashboard if it is not already installed.  Configures the KUBE-FIREWALL to allow access to port 8080.
+
 ## Alternatives
 
 To make your Atomic host Kubernetes-capable you can run the ansible `atomic-master-pre.yml` playbook in the normal manner. eg;
